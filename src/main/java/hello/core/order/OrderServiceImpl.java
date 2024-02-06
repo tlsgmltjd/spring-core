@@ -1,15 +1,21 @@
 package hello.core.order;
 
 import hello.core.discount.DiscountPolicy;
-import hello.core.discount.FixDiscountPolicy;
 import hello.core.member.Member;
 import hello.core.member.MemberRepository;
-import hello.core.member.MemoryMemberRepository;
 
 public class OrderServiceImpl implements OrderService {
 
-    private final MemberRepository memberRepository = new MemoryMemberRepository();
-    private final DiscountPolicy discountPolicy = new FixDiscountPolicy();
+    // 인터페이스에만 의존하게 DIP를 준수했다.
+    // AppConfig를 사용해서 구현체를 바꿔도 해당 클래스는 어떤 구현체가 들어옴
+    // 해당 클래스는 그냥 역할만 보고 로직을 실행하기만 하면 된다. OCP를 준수했다.
+    private final MemberRepository memberRepository ;
+    private final DiscountPolicy discountPolicy;
+
+    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+        this.memberRepository = memberRepository;
+        this.discountPolicy = discountPolicy;
+    }
 
     @Override
     public Order createOrder(Long memberId, String itemName, int itemPrice) {
