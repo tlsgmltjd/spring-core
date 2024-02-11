@@ -11,6 +11,15 @@ import hello.core.order.OrderServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+// 스프링 컨테이너는 @Configuration 어노테이션이 붙은 객체에서
+// @Bean 이 적힌 메서드들을 모두 실행시켜 반환된 객체를 스프링 빈에 등록 시킨다.
+// 이렇게 스프링 컨테이너에 등록된 빈을 스프링 빈이라고 한다.
+
+// ApplicationContext 를 스프링 컨테이너라고 한다.
+// 스프링 빈은 @Bean 이 붙은 메서드 명이 스프링 빈의 이름이다. Default
+// 스프링을 사용하기 전에 DI를 위해 Appconfig를 직접 사용하여 조회했지만 스프링 컨테이너를 통해 필요한 빈을 찾을 수 있다.
+// 스프링 빈은 applicationContext.getBean(빈이름, 빈의 반환타입) 메서드를 이용하여 찾을 수 있디.
+
 @Configuration
 public class AppConfig {
 
