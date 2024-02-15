@@ -16,6 +16,11 @@ public class SingletonService {
 
     // 하지만22 스프링 프레임워크는 싱글톤 패턴의 단점을 해결하고 장점을 살려 사용한다.
 
+    // 스프링 컨테이너는 객체(빈)을 하나만 생성하여 관리해준다
+    // 스프링 컨테이는 싱글톤 컨테이너 역할을 하며 이렇게 싱글톤 객체를 생성하고 관리하는 기능을 싱글톤 레지스터라고 한다.
+    // 스프링 컨테이너의 이런 기능 덕분에 싱글톤 패턴의 단점을 없애버리면서 객체를 싱글톤 상태로 유지할 수 있다.
+    // 싱글톤 패턴을 위한 지저분한 코드가 들어가지 않아도 되며 DIP OCP 테스트, private 생성자로부터 자유롭게 싱글톤을 사용할 수 있다.
+
     private static final SingletonService instance = new SingletonService();
 
     public static SingletonService getInstance() {
