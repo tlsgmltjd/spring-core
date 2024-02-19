@@ -23,23 +23,35 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AppConfig {
 
+    // 5-5
+    // memberService() -> new MemoryMemberRepository()
+    // orderService() -> new MemoryMemberRepository()
+    // 각각 두개의 MemoryMemberRepository가 생성되면서 단 하나만 생성시킨 후 여러 클라이언트에서 사용하는 싱글톤이 깨지는거 아님??
+
     @Bean
     public MemberService memberService() {
+        System.out.println("call AppConfig.memberService");
         return new MemberServiceImpl(memberRepository());
     }
 
     @Bean
     public OrderService orderService() {
+        System.out.println("call AppConfig.orderService");
         return new OrderServiceImpl(memberRepository(), discountPolicy());
     }
 
+    // static 메서드는 프록시가 적용되지 않는다
+    // 스프링 컨테이너는 @Bean 메서드를 호출하면 컨테이너에 동일한 빈이 있는지 확인한다
+    // 그런데 프록시가 적용되지 않는 static 메서드는 컨테이너에 동일한 빈이 존재하는지 검증하는 로직이 수행되지 않기 때문에 싱글톤을 보장하지 않는다.
+    // 해당 프록시 로직은 @Bean 메서드를 오버라이딩 하여 적용하는데 static 메서드는 오버라이딩이 불가능하다!!!!
     @Bean
-    private static MemberRepository memberRepository() {
+    public MemberRepository memberRepository() {
+        System.out.println("call AppConfig.memberRepository");
         return new MemoryMemberRepository();
     }
 
     @Bean
-    private static DiscountPolicy discountPolicy() {
+    public DiscountPolicy discountPolicy() {
 //        return new FixDiscountPolicy();
         return new RateDiscountPolicy();
     }
