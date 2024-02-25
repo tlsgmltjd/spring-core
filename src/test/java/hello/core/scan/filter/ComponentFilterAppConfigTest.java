@@ -30,7 +30,7 @@ public class ComponentFilterAppConfigTest {
     @Configuration
     @ComponentScan(
             includeFilters = @Filter(type = FilterType.ANNOTATION, classes = MyIncludeComponent.class),
-            excludeFilters = @Filter(type = FilterType.ANNOTATION, classes = MyIncludeComponent.class)
+            excludeFilters = @Filter(type = FilterType.ANNOTATION, classes = MyExcludeComponent.class)
     )
     // includeFilters: 컴포넌트 스캔의 대상을 추가로 등록
     // excludeFilters: 컴포넌트 스캔에서 제외할 대상 등록

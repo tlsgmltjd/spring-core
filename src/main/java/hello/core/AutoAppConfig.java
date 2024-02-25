@@ -12,7 +12,6 @@ import org.springframework.context.annotation.FilterType;
 
 @Configuration
 @ComponentScan(
-        basePackages = "hello.core",
         excludeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Configuration.class)
 )
 // 컴포넌트 스캔을 사용하려면 @ComponentScan 어노테이션을 붙히면 된다.
