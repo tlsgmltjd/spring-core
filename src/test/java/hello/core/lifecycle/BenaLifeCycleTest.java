@@ -10,15 +10,17 @@ public class BenaLifeCycleTest {
     @Test
     public void lifeCycleTest() {
         AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(LifeCycleConfig.class);
-        NetworkClient client = ac.getBean(NetworkClient.class);
+        NetworkClient3 client = ac.getBean(NetworkClient3.class);
         ac.close();
     }
 
     @Configuration
     static class LifeCycleConfig{
+
+//        @Bean(initMethod = "init", destroyMethod = "close")
         @Bean
-        public NetworkClient networkClient() {
-            NetworkClient networkClient = new NetworkClient();
+        public NetworkClient3 networkClient() {
+            NetworkClient3 networkClient = new NetworkClient3();
             networkClient.setUrl("http://hello-spring.com");
             return networkClient;
         }
