@@ -2,7 +2,9 @@ package hello.core.scope;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import jakarta.inject.Provider;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Scope;
 
@@ -50,18 +52,43 @@ public class SingletonWithPrototypeTest1 {
         assertThat(c1).isEqualTo(1);
 
         int c2 = clientBea2.logic();
-        assertThat(c2).isEqualTo(2);
+        assertThat(c2).isEqualTo(1);
     }
 
     @Scope("singleton")
     static class ClientBean {
-        private final PrototypeBean prototypeBean; // 생성 시점에 이미 주입되어서 여러 클라이언트에서 요청해도 같은 객체
+//        @Autowired
+//        private final PrototypeBean prototypeBean; // 생성 시점에 이미 주입되어서 여러 클라이언트에서 요청해도 같은 객체
 
-        public ClientBean(PrototypeBean prototypeBean) {
-            this.prototypeBean = prototypeBean;
-        }
+//        @Autowired
+//        private ObjectProvider<PrototypeBean> prototypeBeanProvider;
+//        private ObjectFactory<PrototypeBean> prototypeBeanProvider;
+
+        // 싱글톤과 동시 사용 문제를 직접 AC을 주입받아서 프로토타입 빈이 필요할 때마다 주입시켜서 해결할 수도 있지만
+        // 지금 필요한 기능은 지정한 빈을 컨테이너에서 찾아주는 기능만 필요하므로 복잡한 기능이 있는 AC의 DI보다 DL정도의 기능이 적합하다.
+
+        // ObjectProvider의 getObject() 메서드를 사용해서 항상 새로운 프로토타입 빈이 생성된다!
+        // getObject() 을 호출하면 스프링 컨테이너를 통해 해당 빈을 찾아서 반환해준다 (DL)
+
+        // ObjectFactory 기능이 단순하다 getObject() 메서드만 있음 / 스프링에 의존적
+        // ObjectProvider ObjectFactory를 상속, 옵션, 스트림 처리 같은 편의 기능이 많다 / 스프링에 의존적
+
+        /// JSR330 Provider
+        // 자바 표준인 Provider를 사용하는 방법이다.
+        // provider.get() 메서드를 사용해서 항상 새로운 프로토타입의 빈이 생성된다.
+        // get() 를 사용하면 스프링 컨테이너를 통해 해당 빈을 찾아서 반환한다.
+        // 자바 표준이여서 스프링에 의존적이지 않고 단위테스트, 모킹에도 수월하다
+
+        // implementation 'jakarta.inject:jakarta.inject-api:2.0.1' 해당 라이브러리를 땡겨야한다.
+
+        // @Lockup 어노테이션을 쓸 수도 있다.
+
+        @Autowired
+        private Provider<PrototypeBean> provider;
 
         public int logic() {
+            PrototypeBean prototypeBean = provider.get();
+
             prototypeBean.addCount();
             return prototypeBean.getCount();
         }
